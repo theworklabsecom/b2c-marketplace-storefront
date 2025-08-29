@@ -14,8 +14,8 @@ export default function ResetPasswordLayout({
             <LocalizedClientLink href="/" className="text-2xl font-bold">
               <Image
                 src="/Logo.svg"
-                width={126}
-                height={40}
+                width={252}
+                height={80}
                 alt="Logo"
                 priority
               />
