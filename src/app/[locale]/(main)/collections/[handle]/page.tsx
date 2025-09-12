@@ -5,6 +5,7 @@ import { AlgoliaProductsListing, ProductListing } from "@/components/sections"
 import { getCollectionByHandle } from "@/lib/data/collections"
 import isBot from "@/lib/helpers/isBot"
 import { Suspense } from "react"
+import { headers } from "next/headers"
 
 const ALGOLIA_ID = process.env.NEXT_PUBLIC_ALGOLIA_ID
 const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY
@@ -16,9 +17,9 @@ const SingleCollectionsPage = async ({
 }) => {
   const { handle, locale } = await params
 
-  const bot = isBot(navigator.userAgent)
+  const userAgent = headers().get("user-agent") || ""
+  const bot = isBot(userAgent)
   const collection = await getCollectionByHandle(handle)
-
   if (!collection) return <NotFound />
 
   const breadcrumbsItems = [
@@ -38,12 +39,18 @@ const SingleCollectionsPage = async ({
 
       <Suspense fallback={<ProductListingSkeleton />}>
         {bot || !ALGOLIA_ID || !ALGOLIA_SEARCH_KEY ? (
-          <ProductListing collection_id={collection.id} showSidebar />
+          <>
+        {console.log("Rendering ProductListing")}
+        <ProductListing collection_id={collection.id} showSidebar />
+          </>
         ) : (
-          <AlgoliaProductsListing
-            collection_id={collection.id}
-            locale={locale}
-          />
+          <>
+        {console.log("Rendering AlgoliaProductsListing")}
+        <AlgoliaProductsListing
+          collection_id={collection.id}
+          locale={locale}
+        />
+          </>
         )}
       </Suspense>
     </main>
