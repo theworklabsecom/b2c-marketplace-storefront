@@ -22,7 +22,7 @@ export const HomeProductsCarousel = async ({
       limit: home ? 4 : 99999,
       order: "created_at",
       ...(home
-        ? { fields: "id,title,handle,thumbnail,*variants.calculated_price" }
+        ? { fields: "id,title,handle,thumbnail,*variants,*variants.calculated_price" }
         : {}),
     },
   })
@@ -42,15 +42,15 @@ export const HomeProductsCarousel = async ({
                 home
                   ? (product as HttpTypes.StoreProduct)
                   : products.find((p) => {
-                      const { cheapestPrice } = getProductPrice({
-                        product: p,
-                      })
-                      return (
-                        cheapestPrice &&
-                        p.id === product.id &&
-                        Boolean(cheapestPrice)
-                      )
+                    const { cheapestPrice } = getProductPrice({
+                      product: p,
                     })
+                    return (
+                      cheapestPrice &&
+                      p.id === product.id &&
+                      Boolean(cheapestPrice)
+                    )
+                  })
               }
             />
           )
